@@ -1,0 +1,150 @@
+basePath: /
+definitions:
+  main.APIResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  main.Produk:
+    properties:
+      harga:
+        type: integer
+      id:
+        type: integer
+      nama:
+        type: string
+      stok:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API untuk manajemen produk
+  title: Produk API
+  version: "1.0"
+paths:
+  /api/produk:
+    get:
+      description: Mengambil semua data produk
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Get all produk
+      tags:
+      - produk
+    post:
+      description: Menambahkan data produk baru
+      parameters:
+      - description: Data Produk
+        in: body
+        name: produk
+        required: true
+        schema:
+          $ref: '#/definitions/main.Produk'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Add new produk
+      tags:
+      - produk
+  /api/produk/{id}:
+    delete:
+      description: Menghapus produk berdasarkan ID
+      parameters:
+      - description: Produk ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Delete produk
+      tags:
+      - produk
+    get:
+      description: Mengambil produk berdasarkan ID
+      parameters:
+      - description: Produk ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Get produk by ID
+      tags:
+      - produk
+    put:
+      description: Mengubah data produk berdasarkan ID
+      parameters:
+      - description: Produk ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Data Produk
+        in: body
+        name: produk
+        required: true
+        schema:
+          $ref: '#/definitions/main.Produk'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Update produk
+      tags:
+      - produk
+swagger: "2.0"

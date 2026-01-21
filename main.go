@@ -1,11 +1,21 @@
 package main
 
+// @title Produk API
+// @version 1.0
+// @description API untuk manajemen produk
+// @host localhost:8080
+// @BasePath /
+
 import (
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
+
+	_ "kasir-api/docs"
+
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
 type Produk struct {
@@ -45,6 +55,45 @@ func respondError(w http.ResponseWriter, message string, status int) {
 
 // Func
 
+// @Summary Get all produk
+// @Description Mengambil semua data produk
+// @Tags produk
+// @Produce json
+// @Success 200 {object} APIResponse
+// @Router /api/produk [get]
+func getAllProduk(w http.ResponseWriter, r *http.Request) {
+	respondJSON(w, http.StatusOK, produk, "Berhasil mendapatkan data")
+}
+
+// @Summary Add new produk
+// @Description Menambahkan data produk baru
+// @Tags produk
+// @Param produk body Produk true "Data Produk"
+// @Produce json
+// @Success 201 {object} APIResponse
+// @Failure 400 {object} APIResponse
+// @Router /api/produk [post]
+func addProduk(w http.ResponseWriter, r *http.Request) {
+	var produkBaru Produk
+	err := json.NewDecoder(r.Body).Decode(&produkBaru)
+	if err != nil {
+		respondError(w, "Invalid request", http.StatusBadRequest)
+		return
+	}
+	produkBaru.ID = len(produk) + 1
+	produk = append(produk, produkBaru)
+	respondJSON(w, http.StatusCreated, produkBaru, "Berhasil menambahkan data")
+}
+
+// @Summary Get produk by ID
+// @Description Mengambil produk berdasarkan ID
+// @Tags produk
+// @Param id path int true "Produk ID"
+// @Produce json
+// @Success 200 {object} APIResponse
+// @Failure 400 {object} APIResponse
+// @Failure 404 {object} APIResponse
+// @Router /api/produk/{id} [get]
 func getProdukById(w http.ResponseWriter, r *http.Request) {
 	idStr := strings.TrimPrefix(r.URL.Path, "/api/produk/")
 	id, err := strconv.Atoi(idStr)
@@ -63,7 +112,16 @@ func getProdukById(w http.ResponseWriter, r *http.Request) {
 	respondError(w, "Produk belum ada", http.StatusNotFound)
 }
 
-// PUT localhost:8080/api/produk/{id}
+// @Summary Update produk
+// @Description Mengubah data produk berdasarkan ID
+// @Tags produk
+// @Param id path int true "Produk ID"
+// @Param produk body Produk true "Data Produk"
+// @Produce json
+// @Success 200 {object} APIResponse
+// @Failure 400 {object} APIResponse
+// @Failure 404 {object} APIResponse
+// @Router /api/produk/{id} [put]
 func updateProduk(w http.ResponseWriter, r *http.Request) {
 	// get id dari request
 	// ganti jadi int
@@ -95,6 +153,15 @@ func updateProduk(w http.ResponseWriter, r *http.Request) {
 	respondError(w, "Produk belum ada", http.StatusNotFound)
 }
 
+// @Summary Delete produk
+// @Description Menghapus produk berdasarkan ID
+// @Tags produk
+// @Param id path int true "Produk ID"
+// @Produce json
+// @Success 200 {object} APIResponse
+// @Failure 400 {object} APIResponse
+// @Failure 404 {object} APIResponse
+// @Router /api/produk/{id} [delete]
 func deleteProduk(w http.ResponseWriter, r *http.Request) {
 	// get id
 	// ganti id int
@@ -121,9 +188,7 @@ func deleteProduk(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	// GET localhost:8080/api/produk/{id}
-	// PUT localhost:8080/api/produk/{id}
-	// DELETE localhost:8080/api/produk/{id}
+	// Routes for ID-based operations
 	http.HandleFunc("/api/produk/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 			getProdukById(w, r)
@@ -135,33 +200,23 @@ func main() {
 
 	})
 
-	// GET localhost:8080/api/produk
-	// POST localhost:8080/api/produk
+	// Routes for collection-based operations
 	http.HandleFunc("/api/produk", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
-			respondJSON(w, http.StatusOK, produk, "Berhasil mendapatkan data")
+			getAllProduk(w, r)
 		} else if r.Method == "POST" {
-			// baca data dari request
-			var produkBaru Produk
-			err := json.NewDecoder(r.Body).Decode(&produkBaru)
-			if err != nil {
-				respondError(w, "Invalid request", http.StatusBadRequest)
-			}
-
-			// masukkin data ke dalam variable produk
-			produkBaru.ID = len(produk) + 1
-			produk = append(produk, produkBaru)
-
-			respondJSON(w, http.StatusCreated, produkBaru, "Berhasil menambahkan data")
+			addProduk(w, r)
 		}
 	})
 
-	// localhost:8080/health
+	// Health check
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		respondJSON(w, http.StatusOK, nil, "API is running")
 	})
 	fmt.Println("Server running di :8080")
 
+	// Swagger UI
+	http.Handle("/swagger/", httpSwagger.WrapHandler)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		fmt.Println("gagal running server")
