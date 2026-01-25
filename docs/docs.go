@@ -15,16 +15,16 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/produk": {
+        "/api/categories": {
             "get": {
-                "description": "Mengambil semua data produk",
+                "description": "Retrieve all category data",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "produk"
+                    "categories"
                 ],
-                "summary": "Get all produk",
+                "summary": "Get all categories",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -35,22 +35,22 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "Menambahkan data produk baru",
+                "description": "Add a new category",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "produk"
+                    "categories"
                 ],
-                "summary": "Add new produk",
+                "summary": "Add new category",
                 "parameters": [
                     {
-                        "description": "Data Produk",
-                        "name": "produk",
+                        "description": "Category Data",
+                        "name": "category",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Produk"
+                            "$ref": "#/definitions/main.Category"
                         }
                     }
                 ],
@@ -70,20 +70,20 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/produk/{id}": {
+        "/api/categories/{id}": {
             "get": {
-                "description": "Mengambil produk berdasarkan ID",
+                "description": "Retrieve category by ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "produk"
+                    "categories"
                 ],
-                "summary": "Get produk by ID",
+                "summary": "Get category by ID",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Produk ID",
+                        "description": "Category ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -111,29 +111,29 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "Mengubah data produk berdasarkan ID",
+                "description": "Update category by ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "produk"
+                    "categories"
                 ],
-                "summary": "Update produk",
+                "summary": "Update category",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Produk ID",
+                        "description": "Category ID",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "Data Produk",
-                        "name": "produk",
+                        "description": "Category Data",
+                        "name": "category",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Produk"
+                            "$ref": "#/definitions/main.Category"
                         }
                     }
                 ],
@@ -159,18 +159,201 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Menghapus produk berdasarkan ID",
+                "description": "Delete category by ID",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "produk"
+                    "categories"
                 ],
-                "summary": "Delete produk",
+                "summary": "Delete category",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Produk ID",
+                        "description": "Category ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products": {
+            "get": {
+                "description": "Retrieve all product data",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Get all products",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add a new product",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Add new product",
+                "parameters": [
+                    {
+                        "description": "Product Data",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products/{id}": {
+            "get": {
+                "description": "Retrieve product by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Get product by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update product by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Update product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Product Data",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/main.Product"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/main.APIResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete product by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Delete product",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Product ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -212,19 +395,30 @@ const docTemplate = `{
                 }
             }
         },
-        "main.Produk": {
+        "main.Category": {
             "type": "object",
             "properties": {
-                "harga": {
-                    "type": "integer"
-                },
                 "id": {
                     "type": "integer"
                 },
-                "nama": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.Product": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
                     "type": "string"
                 },
-                "stok": {
+                "price": {
+                    "type": "integer"
+                },
+                "stock": {
                     "type": "integer"
                 }
             }
@@ -238,8 +432,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Produk API",
-	Description:      "API untuk manajemen produk",
+	Title:            "Product API",
+	Description:      "API for product management",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

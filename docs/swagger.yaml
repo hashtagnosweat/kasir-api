@@ -8,27 +8,34 @@ definitions:
       status:
         type: integer
     type: object
-  main.Produk:
+  main.Category:
     properties:
-      harga:
-        type: integer
       id:
         type: integer
-      nama:
+      name:
         type: string
-      stok:
+    type: object
+  main.Product:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: integer
+      stock:
         type: integer
     type: object
 host: localhost:8080
 info:
   contact: {}
-  description: API untuk manajemen produk
-  title: Produk API
+  description: API for product management
+  title: Product API
   version: "1.0"
 paths:
-  /api/produk:
+  /api/categories:
     get:
-      description: Mengambil semua data produk
+      description: Retrieve all category data
       produces:
       - application/json
       responses:
@@ -36,18 +43,18 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/main.APIResponse'
-      summary: Get all produk
+      summary: Get all categories
       tags:
-      - produk
+      - categories
     post:
-      description: Menambahkan data produk baru
+      description: Add a new category
       parameters:
-      - description: Data Produk
+      - description: Category Data
         in: body
-        name: produk
+        name: category
         required: true
         schema:
-          $ref: '#/definitions/main.Produk'
+          $ref: '#/definitions/main.Category'
       produces:
       - application/json
       responses:
@@ -59,14 +66,14 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/main.APIResponse'
-      summary: Add new produk
+      summary: Add new category
       tags:
-      - produk
-  /api/produk/{id}:
+      - categories
+  /api/categories/{id}:
     delete:
-      description: Menghapus produk berdasarkan ID
+      description: Delete category by ID
       parameters:
-      - description: Produk ID
+      - description: Category ID
         in: path
         name: id
         required: true
@@ -86,13 +93,13 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/main.APIResponse'
-      summary: Delete produk
+      summary: Delete category
       tags:
-      - produk
+      - categories
     get:
-      description: Mengambil produk berdasarkan ID
+      description: Retrieve category by ID
       parameters:
-      - description: Produk ID
+      - description: Category ID
         in: path
         name: id
         required: true
@@ -112,23 +119,23 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/main.APIResponse'
-      summary: Get produk by ID
+      summary: Get category by ID
       tags:
-      - produk
+      - categories
     put:
-      description: Mengubah data produk berdasarkan ID
+      description: Update category by ID
       parameters:
-      - description: Produk ID
+      - description: Category ID
         in: path
         name: id
         required: true
         type: integer
-      - description: Data Produk
+      - description: Category Data
         in: body
-        name: produk
+        name: category
         required: true
         schema:
-          $ref: '#/definitions/main.Produk'
+          $ref: '#/definitions/main.Category'
       produces:
       - application/json
       responses:
@@ -144,7 +151,128 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/main.APIResponse'
-      summary: Update produk
+      summary: Update category
       tags:
-      - produk
+      - categories
+  /api/products:
+    get:
+      description: Retrieve all product data
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Get all products
+      tags:
+      - products
+    post:
+      description: Add a new product
+      parameters:
+      - description: Product Data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/main.Product'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Add new product
+      tags:
+      - products
+  /api/products/{id}:
+    delete:
+      description: Delete product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Delete product
+      tags:
+      - products
+    get:
+      description: Retrieve product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Get product by ID
+      tags:
+      - products
+    put:
+      description: Update product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product Data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/main.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.APIResponse'
+      summary: Update product
+      tags:
+      - products
 swagger: "2.0"
