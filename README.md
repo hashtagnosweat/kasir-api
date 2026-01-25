@@ -1,4 +1,4 @@
-````markdown
+
 # Produk API
 
 Produk API is a simple RESTful API for managing products, built with Go. It allows you to create, read, update, and delete products. The API also includes Swagger documentation for easy testing and exploration.
