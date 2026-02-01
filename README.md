@@ -1,28 +1,11 @@
 
-# Produk API
+# Kasir API
 
-Produk API is a simple RESTful API for managing products, built with Go. It allows you to create, read, update, and delete products. The API also includes Swagger documentation for easy testing and exploration.
+Kasir API is a simple RESTful API built with **Go** for a cashier (point-of-sale) system.  
 
-## Table of Contents
+This project is intended for learning and practice, demonstrating how to build a REST API using Go’s standard `net/http` package and how to document APIs using **Swagger** for easy testing and exploration.
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Running the API](#running-the-api)
-- [API Endpoints](#api-endpoints)
-- [Response Format](#response-format)
-- [Swagger Documentation](#swagger-documentation)
-- [Health Check](#health-check)
 
-## Features
-
-- Get all products
-- Get a product by ID
-- Add a new product
-- Update an existing product by ID
-- Delete a product by ID
-- JSON-formatted responses with consistent structure
-- Swagger UI documentation
 
 ## Tech Stack
 
@@ -63,46 +46,7 @@ go run main.go
 
 The API will run on `http://localhost:8080`.
 
-## API Endpoints
 
-### Produk
-
-| Method | Endpoint           | Description            |
-| ------ | ------------------ | ---------------------- |
-| GET    | `/api/produk`      | Get all products       |
-| POST   | `/api/produk`      | Add a new product      |
-| GET    | `/api/produk/{id}` | Get a product by ID    |
-| PUT    | `/api/produk/{id}` | Update a product by ID |
-| DELETE | `/api/produk/{id}` | Delete a product by ID |
-
-### Health Check
-
-| Method | Endpoint  | Description             |
-| ------ | --------- | ----------------------- |
-| GET    | `/health` | Check if API is running |
-
-## Request & Response Format
-
-### Example Product JSON
-
-```json
-{
-  "id": 1,
-  "nama": "Indomie Godog",
-  "harga": 3500,
-  "stok": 10
-}
-```
-
-### Standard API Response
-
-```json
-{
-  "status": 200,
-  "data": {},
-  "message": "Success message"
-}
-```
 
 ## Swagger Documentation
 
