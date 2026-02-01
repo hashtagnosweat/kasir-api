@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Simple cashier API",
+        "description": "X Kasir API",
         "title": "Kasir API",
         "contact": {},
         "version": "1.0"

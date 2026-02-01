@@ -406,7 +406,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "/api",
 	Schemes:          []string{},
 	Title:            "Kasir API",
-	Description:      "Simple cashier API",
+	Description:      "X Kasir API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

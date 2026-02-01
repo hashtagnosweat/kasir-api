@@ -25,7 +25,7 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: Simple cashier API
+  description: X Kasir API
   title: Kasir API
   version: "1.0"
 paths:
