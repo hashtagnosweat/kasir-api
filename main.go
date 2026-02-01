@@ -1,3 +1,9 @@
+// @title Kasir API
+// @version 1.0
+// @description X Kasir API
+// @host localhost:8080
+// @BasePath /api
+
 package main
 
 import (

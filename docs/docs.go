@@ -15,9 +15,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/categories": {
+        "/categories": {
             "get": {
-                "description": "Retrieve all category data",
+                "description": "Retrieve all categories",
                 "produces": [
                     "application/json"
                 ],
@@ -29,28 +29,40 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Category"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
             },
             "post": {
-                "description": "Add a new category",
+                "description": "Create a new category",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "categories"
                 ],
-                "summary": "Add new category",
+                "summary": "Create category",
                 "parameters": [
                     {
-                        "description": "Category Data",
+                        "description": "Category data",
                         "name": "category",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Category"
+                            "$ref": "#/definitions/models.Category"
                         }
                     }
                 ],
@@ -58,21 +70,21 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Category"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             }
         },
-        "/api/categories/{id}": {
+        "/categories/{id}": {
             "get": {
-                "description": "Retrieve category by ID",
+                "description": "Retrieve a category by its ID",
                 "produces": [
                     "application/json"
                 ],
@@ -93,25 +105,22 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Category"
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "Not found",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             },
             "put": {
-                "description": "Update category by ID",
+                "description": "Update an existing category",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -128,12 +137,12 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Category Data",
+                        "description": "Category data",
                         "name": "category",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Category"
+                            "$ref": "#/definitions/models.Category"
                         }
                     }
                 ],
@@ -141,25 +150,19 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Category"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             },
             "delete": {
-                "description": "Delete category by ID",
+                "description": "Delete a category by ID",
                 "produces": [
                     "application/json"
                 ],
@@ -180,27 +183,24 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "500": {
+                        "description": "Internal error",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             }
         },
-        "/api/products": {
+        "/products": {
             "get": {
-                "description": "Retrieve all product data",
+                "description": "Retrieve all products",
                 "produces": [
                     "application/json"
                 ],
@@ -212,28 +212,34 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Product"
+                            }
                         }
                     }
                 }
             },
             "post": {
-                "description": "Add a new product",
+                "description": "Create a new product",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "products"
                 ],
-                "summary": "Add new product",
+                "summary": "Create product",
                 "parameters": [
                     {
-                        "description": "Product Data",
+                        "description": "Product data",
                         "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Product"
+                            "$ref": "#/definitions/models.Product"
                         }
                     }
                 ],
@@ -241,21 +247,20 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Product"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             }
         },
-        "/api/products/{id}": {
+        "/products/{id}": {
             "get": {
-                "description": "Retrieve product by ID",
                 "produces": [
                     "application/json"
                 ],
@@ -276,25 +281,21 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Product"
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "Not found",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             },
             "put": {
-                "description": "Update product by ID",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -311,12 +312,12 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Product Data",
+                        "description": "Product data",
                         "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Product"
+                            "$ref": "#/definitions/models.Product"
                         }
                     }
                 ],
@@ -324,25 +325,12 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Product"
                         }
                     }
                 }
             },
             "delete": {
-                "description": "Delete product by ID",
                 "produces": [
                     "application/json"
                 ],
@@ -363,19 +351,10 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -383,19 +362,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "main.APIResponse": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "message": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "integer"
-                }
-            }
-        },
-        "main.Category": {
+        "models.Category": {
             "type": "object",
             "properties": {
                 "id": {
@@ -406,9 +373,15 @@ const docTemplate = `{
                 }
             }
         },
-        "main.Product": {
+        "models.Product": {
             "type": "object",
             "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "category_name": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },
@@ -430,10 +403,10 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/",
+	BasePath:         "/api",
 	Schemes:          []string{},
-	Title:            "Product API",
-	Description:      "API for product management",
+	Title:            "Kasir API",
+	Description:      "Simple cashier API",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

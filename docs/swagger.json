@@ -1,17 +1,17 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "API for product management",
-        "title": "Product API",
+        "description": "Simple cashier API",
+        "title": "Kasir API",
         "contact": {},
         "version": "1.0"
     },
     "host": "localhost:8080",
-    "basePath": "/",
+    "basePath": "/api",
     "paths": {
-        "/api/categories": {
+        "/categories": {
             "get": {
-                "description": "Retrieve all category data",
+                "description": "Retrieve all categories",
                 "produces": [
                     "application/json"
                 ],
@@ -23,28 +23,40 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Category"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal error",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 }
             },
             "post": {
-                "description": "Add a new category",
+                "description": "Create a new category",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "categories"
                 ],
-                "summary": "Add new category",
+                "summary": "Create category",
                 "parameters": [
                     {
-                        "description": "Category Data",
+                        "description": "Category data",
                         "name": "category",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Category"
+                            "$ref": "#/definitions/models.Category"
                         }
                     }
                 ],
@@ -52,21 +64,21 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Category"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             }
         },
-        "/api/categories/{id}": {
+        "/categories/{id}": {
             "get": {
-                "description": "Retrieve category by ID",
+                "description": "Retrieve a category by its ID",
                 "produces": [
                     "application/json"
                 ],
@@ -87,25 +99,22 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Category"
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "Not found",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             },
             "put": {
-                "description": "Update category by ID",
+                "description": "Update an existing category",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -122,12 +131,12 @@
                         "required": true
                     },
                     {
-                        "description": "Category Data",
+                        "description": "Category data",
                         "name": "category",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Category"
+                            "$ref": "#/definitions/models.Category"
                         }
                     }
                 ],
@@ -135,25 +144,19 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Category"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             },
             "delete": {
-                "description": "Delete category by ID",
+                "description": "Delete a category by ID",
                 "produces": [
                     "application/json"
                 ],
@@ -174,27 +177,24 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     },
-                    "400": {
-                        "description": "Bad Request",
+                    "500": {
+                        "description": "Internal error",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             }
         },
-        "/api/products": {
+        "/products": {
             "get": {
-                "description": "Retrieve all product data",
+                "description": "Retrieve all products",
                 "produces": [
                     "application/json"
                 ],
@@ -206,28 +206,34 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Product"
+                            }
                         }
                     }
                 }
             },
             "post": {
-                "description": "Add a new product",
+                "description": "Create a new product",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "products"
                 ],
-                "summary": "Add new product",
+                "summary": "Create product",
                 "parameters": [
                     {
-                        "description": "Product Data",
+                        "description": "Product data",
                         "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Product"
+                            "$ref": "#/definitions/models.Product"
                         }
                     }
                 ],
@@ -235,21 +241,20 @@
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Product"
                         }
                     },
                     "400": {
-                        "description": "Bad Request",
+                        "description": "Invalid request",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             }
         },
-        "/api/products/{id}": {
+        "/products/{id}": {
             "get": {
-                "description": "Retrieve product by ID",
                 "produces": [
                     "application/json"
                 ],
@@ -270,25 +275,21 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Product"
                         }
                     },
                     "404": {
-                        "description": "Not Found",
+                        "description": "Not found",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "string"
                         }
                     }
                 }
             },
             "put": {
-                "description": "Update product by ID",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
@@ -305,12 +306,12 @@
                         "required": true
                     },
                     {
-                        "description": "Product Data",
+                        "description": "Product data",
                         "name": "product",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/main.Product"
+                            "$ref": "#/definitions/models.Product"
                         }
                     }
                 ],
@@ -318,25 +319,12 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "$ref": "#/definitions/models.Product"
                         }
                     }
                 }
             },
             "delete": {
-                "description": "Delete product by ID",
                 "produces": [
                     "application/json"
                 ],
@@ -357,19 +345,10 @@
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/main.APIResponse"
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     }
                 }
@@ -377,19 +356,7 @@
         }
     },
     "definitions": {
-        "main.APIResponse": {
-            "type": "object",
-            "properties": {
-                "data": {},
-                "message": {
-                    "type": "string"
-                },
-                "status": {
-                    "type": "integer"
-                }
-            }
-        },
-        "main.Category": {
+        "models.Category": {
             "type": "object",
             "properties": {
                 "id": {
@@ -400,9 +367,15 @@
                 }
             }
         },
-        "main.Product": {
+        "models.Product": {
             "type": "object",
             "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "category_name": {
+                    "type": "string"
+                },
                 "id": {
                     "type": "integer"
                 },

@@ -1,22 +1,18 @@
-basePath: /
+basePath: /api
 definitions:
-  main.APIResponse:
-    properties:
-      data: {}
-      message:
-        type: string
-      status:
-        type: integer
-    type: object
-  main.Category:
+  models.Category:
     properties:
       id:
         type: integer
       name:
         type: string
     type: object
-  main.Product:
+  models.Product:
     properties:
+      category_id:
+        type: integer
+      category_name:
+        type: string
       id:
         type: integer
       name:
@@ -29,49 +25,57 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: API for product management
-  title: Product API
+  description: Simple cashier API
+  title: Kasir API
   version: "1.0"
 paths:
-  /api/categories:
+  /categories:
     get:
-      description: Retrieve all category data
+      description: Retrieve all categories
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.APIResponse'
+            items:
+              $ref: '#/definitions/models.Category'
+            type: array
+        "500":
+          description: Internal error
+          schema:
+            type: string
       summary: Get all categories
       tags:
       - categories
     post:
-      description: Add a new category
+      consumes:
+      - application/json
+      description: Create a new category
       parameters:
-      - description: Category Data
+      - description: Category data
         in: body
         name: category
         required: true
         schema:
-          $ref: '#/definitions/main.Category'
+          $ref: '#/definitions/models.Category'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/main.APIResponse'
+            $ref: '#/definitions/models.Category'
         "400":
-          description: Bad Request
+          description: Invalid request
           schema:
-            $ref: '#/definitions/main.APIResponse'
-      summary: Add new category
+            type: string
+      summary: Create category
       tags:
       - categories
-  /api/categories/{id}:
+  /categories/{id}:
     delete:
-      description: Delete category by ID
+      description: Delete a category by ID
       parameters:
       - description: Category ID
         in: path
@@ -84,20 +88,18 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.APIResponse'
-        "400":
-          description: Bad Request
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal error
           schema:
-            $ref: '#/definitions/main.APIResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/main.APIResponse'
+            type: string
       summary: Delete category
       tags:
       - categories
     get:
-      description: Retrieve category by ID
+      description: Retrieve a category by its ID
       parameters:
       - description: Category ID
         in: path
@@ -110,89 +112,86 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.APIResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/main.APIResponse'
+            $ref: '#/definitions/models.Category'
         "404":
-          description: Not Found
+          description: Not found
           schema:
-            $ref: '#/definitions/main.APIResponse'
+            type: string
       summary: Get category by ID
       tags:
       - categories
     put:
-      description: Update category by ID
+      consumes:
+      - application/json
+      description: Update an existing category
       parameters:
       - description: Category ID
         in: path
         name: id
         required: true
         type: integer
-      - description: Category Data
+      - description: Category data
         in: body
         name: category
         required: true
         schema:
-          $ref: '#/definitions/main.Category'
+          $ref: '#/definitions/models.Category'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.APIResponse'
+            $ref: '#/definitions/models.Category'
         "400":
-          description: Bad Request
+          description: Invalid request
           schema:
-            $ref: '#/definitions/main.APIResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/main.APIResponse'
+            type: string
       summary: Update category
       tags:
       - categories
-  /api/products:
+  /products:
     get:
-      description: Retrieve all product data
+      description: Retrieve all products
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.APIResponse'
+            items:
+              $ref: '#/definitions/models.Product'
+            type: array
       summary: Get all products
       tags:
       - products
     post:
-      description: Add a new product
+      consumes:
+      - application/json
+      description: Create a new product
       parameters:
-      - description: Product Data
+      - description: Product data
         in: body
         name: product
         required: true
         schema:
-          $ref: '#/definitions/main.Product'
+          $ref: '#/definitions/models.Product'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/main.APIResponse'
+            $ref: '#/definitions/models.Product'
         "400":
-          description: Bad Request
+          description: Invalid request
           schema:
-            $ref: '#/definitions/main.APIResponse'
-      summary: Add new product
+            type: string
+      summary: Create product
       tags:
       - products
-  /api/products/{id}:
+  /products/{id}:
     delete:
-      description: Delete product by ID
       parameters:
       - description: Product ID
         in: path
@@ -205,20 +204,13 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.APIResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/main.APIResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/main.APIResponse'
+            additionalProperties:
+              type: string
+            type: object
       summary: Delete product
       tags:
       - products
     get:
-      description: Retrieve product by ID
       parameters:
       - description: Product ID
         in: path
@@ -231,47 +223,36 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.APIResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/main.APIResponse'
+            $ref: '#/definitions/models.Product'
         "404":
-          description: Not Found
+          description: Not found
           schema:
-            $ref: '#/definitions/main.APIResponse'
+            type: string
       summary: Get product by ID
       tags:
       - products
     put:
-      description: Update product by ID
+      consumes:
+      - application/json
       parameters:
       - description: Product ID
         in: path
         name: id
         required: true
         type: integer
-      - description: Product Data
+      - description: Product data
         in: body
         name: product
         required: true
         schema:
-          $ref: '#/definitions/main.Product'
+          $ref: '#/definitions/models.Product'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.APIResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/main.APIResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/main.APIResponse'
+            $ref: '#/definitions/models.Product'
       summary: Update product
       tags:
       - products
