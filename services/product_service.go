@@ -1,16 +1,21 @@
 package services
 
 import (
+	"errors"
 	"kasir-api/models"
 	"kasir-api/repositories"
 )
 
 type ProductService struct {
-	repo *repositories.ProductRepository
+	repo         *repositories.ProductRepository
+	categoryRepo *repositories.CategoryRepository
 }
 
-func NewProductService(repo *repositories.ProductRepository) *ProductService {
-	return &ProductService{repo: repo}
+func NewProductService(repo *repositories.ProductRepository, categoryRepo *repositories.CategoryRepository) *ProductService {
+	return &ProductService{
+		repo:         repo,
+		categoryRepo: categoryRepo,
+	}
 }
 
 func (s *ProductService) GetAll() ([]models.Product, error) {
@@ -18,6 +23,14 @@ func (s *ProductService) GetAll() ([]models.Product, error) {
 }
 
 func (s *ProductService) Create(data *models.Product) error {
+	exists, err := s.categoryRepo.Exists(data.CategoryID)
+	if err != nil {
+		return err
+	}
+	if !exists {
+		return errors.New("category is not found")
+	}
+
 	return s.repo.Create(data)
 }
 
