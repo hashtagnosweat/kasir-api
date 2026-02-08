@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"kasir-api/models"
+	"strings"
 )
 
 type TransactionRepository struct {
@@ -33,8 +34,10 @@ func (repo *TransactionRepository) CreateTransaction(items []models.CheckoutItem
 	for _, item := range items {
 		var productName string
 		var productID, price, stock int
+
 		// get product dapet pricing
 		err := tx.QueryRow("SELECT id, name, price, stock FROM products WHERE id=$1", item.ProductID).Scan(&productID, &productName, &price, &stock)
+
 		if err == sql.ErrNoRows {
 			return nil, fmt.Errorf("product id %d not found", item.ProductID)
 		}
@@ -71,12 +74,37 @@ func (repo *TransactionRepository) CreateTransaction(items []models.CheckoutItem
 	}
 
 	// insert transaction details
-	for i, detail := range details {
-		err := tx.QueryRow(`INSERT INTO transaction_details (transaction_id, product_id, quantity, subtotal) VALUES ($1, $2, $3, $4) RETURNING ID`, transactionID, detail.ProductID, detail.Quantity, detail.Subtotal).Scan(&details[i].ID)
+	if len(details) > 0 {
+		valueStrings := make([]string, 0, len(details))
+		valueArgs := make([]any, 0, len(details)*4)
+
+		for i, detail := range details {
+			base := i * 4
+
+			valueStrings = append(valueStrings,
+				fmt.Sprintf("($%d,$%d,$%d,$%d)",
+					base+1, base+2, base+3, base+4),
+			)
+
+			valueArgs = append(valueArgs,
+				transactionID,
+				detail.ProductID,
+				detail.Quantity,
+				detail.Subtotal,
+			)
+
+			details[i].TransactionID = transactionID
+		}
+
+		query := fmt.Sprintf(
+			"INSERT INTO transaction_details (transaction_id, product_id, quantity, subtotal) VALUES %s",
+			strings.Join(valueStrings, ","),
+		)
+
+		_, err = tx.Exec(query, valueArgs...)
 		if err != nil {
 			return nil, err
 		}
-		details[i].TransactionID = transactionID
 	}
 
 	if err := tx.Commit(); err != nil {
