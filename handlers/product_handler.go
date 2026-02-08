@@ -17,7 +17,6 @@ func NewProductHandler(service *services.ProductService) *ProductHandler {
 	return &ProductHandler{service: service}
 }
 
-// HandleProducts - GET /api/products
 func (h *ProductHandler) HandleProducts(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
@@ -31,11 +30,13 @@ func (h *ProductHandler) HandleProducts(w http.ResponseWriter, r *http.Request) 
 
 // GetAll godoc
 // @Summary Get all products
-// @Description Retrieve all products
+// @Description Retrieve all products, optionally filtered by name
 // @Tags products
 // @Produce json
+// @Param name query string false "Filter products by name"
 // @Success 200 {array} models.Product
-// @Router /products [get]
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /api/products [get]
 func (h *ProductHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
 	products, err := h.service.GetAll(name)

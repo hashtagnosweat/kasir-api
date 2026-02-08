@@ -15,6 +15,181 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/checkout": {
+            "post": {
+                "description": "Process a list of items and create a transaction",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transaction"
+                ],
+                "summary": "Create a new transaction (checkout)",
+                "parameters": [
+                    {
+                        "description": "Checkout request body",
+                        "name": "checkout",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.CheckoutRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Transaction"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request body",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/products": {
+            "get": {
+                "description": "Retrieve all products, optionally filtered by name",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Get all products",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter products by name",
+                        "name": "name",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Product"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/report": {
+            "get": {
+                "description": "Returns total revenue, total transactions, and best-selling product between start_date and end_date",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "report"
+                ],
+                "summary": "Get report by date range",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Start date in YYYY-MM-DD format",
+                        "name": "start",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "End date in YYYY-MM-DD format",
+                        "name": "end",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.TodayReport"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/report/today": {
+            "get": {
+                "description": "Returns total revenue, total transactions, and best-selling product for today",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "report"
+                ],
+                "summary": "Get today's report",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.TodayReport"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/categories": {
             "get": {
                 "description": "Retrieve all categories",
@@ -199,27 +374,6 @@ const docTemplate = `{
             }
         },
         "/products": {
-            "get": {
-                "description": "Retrieve all products",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "products"
-                ],
-                "summary": "Get all products",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/models.Product"
-                            }
-                        }
-                    }
-                }
-            },
             "post": {
                 "description": "Create a new product",
                 "consumes": [
@@ -362,6 +516,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "models.BestSellingProduct": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "qty_sold": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.Category": {
             "type": "object",
             "properties": {
@@ -370,6 +535,28 @@ const docTemplate = `{
                 },
                 "name": {
                     "type": "string"
+                }
+            }
+        },
+        "models.CheckoutItem": {
+            "type": "object",
+            "properties": {
+                "product_id": {
+                    "type": "integer"
+                },
+                "quantity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.CheckoutRequest": {
+            "type": "object",
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.CheckoutItem"
+                    }
                 }
             }
         },
@@ -392,6 +579,60 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "stock": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.TodayReport": {
+            "type": "object",
+            "properties": {
+                "best_product": {
+                    "$ref": "#/definitions/models.BestSellingProduct"
+                },
+                "total_revenue": {
+                    "type": "integer"
+                },
+                "total_transactions": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Transaction": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.TransactionDetail"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "total_amount": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.TransactionDetail": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "product_id": {
+                    "type": "integer"
+                },
+                "product_name": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer"
+                },
+                "subtotal": {
+                    "type": "integer"
+                },
+                "transaction_id": {
                     "type": "integer"
                 }
             }

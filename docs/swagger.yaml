@@ -1,11 +1,32 @@
 basePath: /api
 definitions:
+  models.BestSellingProduct:
+    properties:
+      name:
+        type: string
+      qty_sold:
+        type: integer
+    type: object
   models.Category:
     properties:
       id:
         type: integer
       name:
         type: string
+    type: object
+  models.CheckoutItem:
+    properties:
+      product_id:
+        type: integer
+      quantity:
+        type: integer
+    type: object
+  models.CheckoutRequest:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/models.CheckoutItem'
+        type: array
     type: object
   models.Product:
     properties:
@@ -22,6 +43,41 @@ definitions:
       stock:
         type: integer
     type: object
+  models.TodayReport:
+    properties:
+      best_product:
+        $ref: '#/definitions/models.BestSellingProduct'
+      total_revenue:
+        type: integer
+      total_transactions:
+        type: integer
+    type: object
+  models.Transaction:
+    properties:
+      details:
+        items:
+          $ref: '#/definitions/models.TransactionDetail'
+        type: array
+      id:
+        type: integer
+      total_amount:
+        type: integer
+    type: object
+  models.TransactionDetail:
+    properties:
+      id:
+        type: integer
+      product_id:
+        type: integer
+      product_name:
+        type: string
+      quantity:
+        type: integer
+      subtotal:
+        type: integer
+      transaction_id:
+        type: integer
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -29,6 +85,123 @@ info:
   title: Kasir API
   version: "1.0"
 paths:
+  /api/checkout:
+    post:
+      consumes:
+      - application/json
+      description: Process a list of items and create a transaction
+      parameters:
+      - description: Checkout request body
+        in: body
+        name: checkout
+        required: true
+        schema:
+          $ref: '#/definitions/models.CheckoutRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "400":
+          description: Invalid request body
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new transaction (checkout)
+      tags:
+      - transaction
+  /api/products:
+    get:
+      description: Retrieve all products, optionally filtered by name
+      parameters:
+      - description: Filter products by name
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Product'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all products
+      tags:
+      - products
+  /api/report:
+    get:
+      description: Returns total revenue, total transactions, and best-selling product
+        between start_date and end_date
+      parameters:
+      - description: Start date in YYYY-MM-DD format
+        in: query
+        name: start
+        required: true
+        type: string
+      - description: End date in YYYY-MM-DD format
+        in: query
+        name: end
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TodayReport'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get report by date range
+      tags:
+      - report
+  /api/report/today:
+    get:
+      description: Returns total revenue, total transactions, and best-selling product
+        for today
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TodayReport'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get today's report
+      tags:
+      - report
   /categories:
     get:
       description: Retrieve all categories
@@ -151,20 +324,6 @@ paths:
       tags:
       - categories
   /products:
-    get:
-      description: Retrieve all products
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Product'
-            type: array
-      summary: Get all products
-      tags:
-      - products
     post:
       consumes:
       - application/json

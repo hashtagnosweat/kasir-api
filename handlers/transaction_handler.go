@@ -7,6 +7,7 @@ import (
 	"net/http"
 )
 
+// TransactionHandler handles checkout requests
 type TransactionHandler struct {
 	service *services.TransactionService
 }
@@ -15,6 +16,17 @@ func NewTransactionHandler(service *services.TransactionService) *TransactionHan
 	return &TransactionHandler{service: service}
 }
 
+// HandleCheckout godoc
+// @Summary Create a new transaction (checkout)
+// @Description Process a list of items and create a transaction
+// @Tags transaction
+// @Accept  json
+// @Produce  json
+// @Param checkout body models.CheckoutRequest true "Checkout request body"
+// @Success 200 {object} models.Transaction
+// @Failure 400 {object} map[string]string "Invalid request body"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /api/checkout [post]
 func (h *TransactionHandler) HandleCheckout(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodPost:
